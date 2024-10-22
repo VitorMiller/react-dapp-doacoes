@@ -56,7 +56,7 @@ const Header = () => {
                                     <nav>
                                         <ul id="navigation">
                                             <li><a href="/">home</a></li>
-                                            <li><a href="/cadastro">Área ONG</a></li>
+                                            <li><a href="/login">Área ONG</a></li>
                                             {/* <li><a href="#">blog <i className="ti-angle-down"></i></a>
                                             <ul className="submenu">
                                                 <li><a href="blog.html">blog</a></li>
