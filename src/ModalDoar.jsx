@@ -12,7 +12,9 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h2 className="modal-title fs-5">Apoie a instituição</h2>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div className="modal-body">
                         <div className="row">
