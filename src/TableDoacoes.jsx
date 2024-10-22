@@ -12,7 +12,7 @@ const TableDoacoes = ({ doacoes }) => {
                         <th>Valor</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={{"font-family": "Roboto"}}>
                     {doacoes.map((doacao, index) => (
                         <tr key={index}>
                             <td>{doacao.data}</td>

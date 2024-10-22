@@ -12,7 +12,7 @@ const TableRetiradas = ({ retiradas }) => {
                         <th>Valor</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={{"font-family": "Roboto"}}>
                     {retiradas.map((retirada, index) => (
                         <tr key={index}>
                             <td>{retirada.data}</td>

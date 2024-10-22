@@ -19,11 +19,12 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
                     <div className="modal-body">
                         <div className="row">
                             <div className="col-md-6">
-                                <div className="card mb-3">
+                                <div className="card mb-3 h-100">
                                     <img
                                         src="/img/causes/1.png"
                                         className="card-img-top"
-                                        alt="Charity Image"
+                                        style={{"height": "200px", "object-fit": "cover"}}
+                                        alt="Charity Image"                                        
                                     />
                                     <div className="card-body">
                                         <h5 className="card-title">World Wildlife Fund</h5>
@@ -40,9 +41,25 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
                             {/* Coluna 2 - Seleção de Moeda e Valor */}
                             <div className="col-md-6">
                                 <form>
+                                    <div className='form-group mt-3'>
+                                        <label htmlFor="nome">Nome Completo</label>
+                                        <input type="text" name="nome" id="nome" className='form-control' />
+                                    </div>
+                                    <div className='form-group mt-3'>
+                                        <label htmlFor="nascimento">Data de Nascimento</label>
+                                        <input type="date" name="nascimento" id="nascimento" className='form-control' />
+                                    </div>
+                                    <div className='form-group mt-3'>
+                                        <label htmlFor="email">Email</label>
+                                        <input type="email" name="email" id="email" className='form-control' />
+                                    </div>
+                                    <div className='form-group mt-3'>
+                                        <label htmlFor="telefone">Telefone</label>
+                                        <input type="text" name="telefone" id="telefone" className='form-control' />
+                                    </div>
                                     <div className="form-group mt-3">
-                                        <label>Valor</label>
-                                        <input className='form-control' type="number" placeholder="0.0" />
+                                        <label htmlFor='valor'>Valor</label>
+                                        <input className='form-control' type="number" name="valor" id="valor" placeholder="0.0" />
                                     </div>
 
                                     <button variant="warning" className="mt-4 w-100">
@@ -51,6 +68,10 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
                                 </form>
                             </div>
                         </div>
+                        <div className='mt-5 mb-10'>
+                            <h4>Balanço: R$5.000,00</h4>
+                        </div>
+                        <hr />
                         {doacoes.length > 0 ? 
                             <TableDoacoes doacoes={doacoes} /> : 
                             (<p>Nenhuma doação realizada ainda.</p>)}

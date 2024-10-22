@@ -49,8 +49,17 @@ const Cadastro = () => {
                         </div>
                         <div className="mt-10">
                             <select name="" className="form-control">
-                                <option value="">Categoria da causa</option>
-                                <option value="1">Causa animal</option>
+                                <option value="">Principal Causa</option>
+                                <option value="1">Meio Ambiente</option>
+                                <option value="2">Saúde</option>
+                                <option value="3">Trabalho</option>
+                                <option value="4">Reforma Agrária</option>
+                                <option value="5">Direito dos Animais</option>
+                                <option value="5">Proteção de minorias</option>
+                                <option value="5">Fome</option>
+                                <option value="5">Pobreza</option>
+                                <option value="5">Serviços Culturais</option>
+                                <option value="5">Lazer</option>
                             </select>
                         </div>
                         <div className="mt-10">
@@ -78,6 +87,7 @@ const Cadastro = () => {
                                 <option value="4">GO</option>
                             </select>
                         </div>
+                        <button type="submit" className="mt-5 btn btn-success">Cadastrar</button>
                     </form>
                 </div >
             </div >
