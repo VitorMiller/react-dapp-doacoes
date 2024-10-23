@@ -9,9 +9,7 @@ const Layout = () => {
    
     <div className="min-vh-100 d-flex flex-column">
       <Header/> 
-        
-          <Outlet />
-        
+          <Outlet/>
       <Footer/>
     </div>
  

@@ -4,6 +4,7 @@ import Home from './Home'
 import Layout from "./Layout"
 import Cadastro from "./Cadastro"
 import Login from "./Login"
+import PerfilOng from "./PerfilOng"
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home/>} />
           <Route path="/cadastro" element={<Cadastro/>} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/perfilOng" element={<PerfilOng/>} />
         </Route>
         <Route>
           

@@ -17,7 +17,7 @@ const Login = () => {
                             
                         </form>
                         <p className="text-center mt-2 mb-3">Não possui conta? <a href="/cadastro">Cadastre-se!</a></p>
-                        <button className="mt-2 genric-btn info radius">Entrar</button>
+                        <a href="/perfilOng"><button className="mt-2 genric-btn info radius">Entrar</button></a>
                     </div >
                 </div>
             
