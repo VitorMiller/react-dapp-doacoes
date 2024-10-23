@@ -3,6 +3,33 @@ const PerfilOng = () => {
    
    
 	<div className="container mt-5">
+
+        
+      <div className="section-top-border">
+    <h3 className="mb-30 mt-5 text-center">Balanço Financeiro</h3>
+
+    {/* Contêiner da Tabela Centralizada */}
+    <div className="d-flex justify-content-center">
+    <table style={{ width: '70%', textAlign: 'center'}}>
+        <thead>
+            <tr>
+                <th style={{ width: '33%' }}>Total Entradas</th>
+                <th style={{ width: '33%' }}>Total Retiradas</th>
+                <th style={{ width: '33%' }}>Saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>150</td>
+                <td>10</td>
+                <td>140</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+
         <div className="section-top-border">
             <h3 className="mb-30 mt-5">Doações Recebidas</h3>
             <div className="progress-table-wrap">
