@@ -6,6 +6,7 @@ import LayoutLogado from "./LayoutLogado"
 import Cadastro from "./Cadastro"
 import Login from "./Login"
 import PerfilOng from "./PerfilOng"
+import SaibaMais from "./SaibaMais"
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/cadastro" element={<Cadastro/>} />
             <Route path="/login" element={<Login/>} />
+            <Route path="/saibaMais" element={<SaibaMais/>} />
+
 
         </Route>
       

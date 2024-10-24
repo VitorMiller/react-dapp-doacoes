@@ -4,7 +4,7 @@ import './Home.css'
 import ModalDoar from './ModalDoar';
 
 function Home() {
-    const [SelectedOngId, setSelectedOngId] = useState(0);
+    const [SelectOngId, setSelectedOngId] = useState(0);
     const [doacoes, setDoacoes] = useState([]);
     const [retiradas, setRetiradas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ function Home() {
                                     <span>CONTRIBUA AGORA MESMO.</span>
                                     <h3> Ajude as ONG&apos;s Cadastradas</h3>
                                     <p>Com a transparência e segurança da blockchain, nosso site permite você visualize o <br />destino e uso da sua doação.</p>
-                                    <a href="About.html" className="boxed-btn3">Saiba Mais
+                                    <a href="/saibaMais" className="boxed-btn3">Saiba Mais
                                     </a>
                                 </div>
                             </div>
@@ -107,7 +107,8 @@ function Home() {
                                         <p>Lorem ipsum, or lipsum as it is
                                             sometimes known, is dummy
                                             text used in laying out print.</p>
-                                        <ModalDoar ongId={SelectedOngId} doacoes={doacoes} retiradas={retiradas}/>
+                                        {console.log(doacoes)}
+                                        <ModalDoar ongId={SelectOngId} doacoes={doacoes} retiradas={retiradas}/>
                                         <button className="" onClick={() => handleDoar(1)}>Fazer Doação</button>
                                     </div>
                                 </div>
