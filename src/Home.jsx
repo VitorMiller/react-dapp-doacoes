@@ -4,7 +4,7 @@ import './Home.css'
 import ModalDoar from './ModalDoar';
 
 function Home() {
-    const [SelectOngId, setSelectedOngId] = useState(0);
+    const [SelectedOngId, setSelectedOngId] = useState(0);
     const [doacoes, setDoacoes] = useState([]);
     const [retiradas, setRetiradas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -107,8 +107,7 @@ function Home() {
                                         <p>Lorem ipsum, or lipsum as it is
                                             sometimes known, is dummy
                                             text used in laying out print.</p>
-                                        {console.log(doacoes)}
-                                        <ModalDoar ongId={SelectOngId} doacoes={doacoes} retiradas={retiradas}/>
+                                        <ModalDoar ongId={SelectedOngId} doacoes={doacoes} retiradas={retiradas}/>
                                         <button className="" onClick={() => handleDoar(1)}>Fazer Doação</button>
                                     </div>
                                 </div>
