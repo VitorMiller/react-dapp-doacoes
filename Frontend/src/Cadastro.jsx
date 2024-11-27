@@ -87,6 +87,10 @@ const Cadastro = () => {
                                 <option value="4">GO</option>
                             </select>
                         </div>
+                        <div className="mt-10">
+                            <input type="text" name="carteira" placeholder="Carteira" required
+                                className="form-control" />
+                        </div>
                         <button type="submit" className="mt-5 btn btn-success">Cadastrar</button>
                     </form>
                 </div >

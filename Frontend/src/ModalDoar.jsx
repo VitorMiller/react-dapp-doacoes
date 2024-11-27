@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import TableDoacoes from './TableDoacoes';
 import TableRetiradas from './TableRetiradas';
 import { ethers } from 'ethers';
-
+import axios from 'axios'; // Importe o axios
+import api from './axiosApi';
 
 const ModalDoar = ({ ongId, doacoes, retiradas }) => {
-    
-    const [walletAddress, setWalletAddress] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [donationAmount, setDonationAmount] = useState(''); // Estado para o valor da doação
-    //const ethers = require("ethers");
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [donationAmount, setDonationAmount] = useState(''); // Estado para o valor da doação
 
   const ONG_WALLET_ADDRESS = '0x1feF888b16e87FBcc2F676FE562259ec9266703F'; // Endereço da carteira da ONG
-
 
   const connectWallet = async () => {
     try {
@@ -29,7 +27,6 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
     }
   };
 
-
   const sendDonation = async () => {
     if (!donationAmount || isNaN(donationAmount) || Number(donationAmount) <= 0) {
       setErrorMessage('Por favor, insira um valor válido para a doação.');
@@ -42,16 +39,10 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
         return;
       }
 
-      // Verificar se o window.ethereum está disponível
-      //const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      console.log("Account:", await signer.getAddress());
-
-
       const userAddress = await signer.getAddress();
       console.log("Endereço do usuário conectado: ", userAddress);
-
 
       const value = ethers.parseUnits(donationAmount, 'ether');
 
@@ -63,9 +54,40 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
       await transaction.wait(); // Aguardar a confirmação da transação
       alert('Doação realizada com sucesso!');
       setDonationAmount(''); // Limpar o campo de valor após a doação
+
+      // Dados do formulário
+      const nome = document.getElementById('nome').value;
+      const nascimento = document.getElementById('nascimento').value;
+      const email = document.getElementById('email').value;
+      const telefone = document.getElementById('telefone').value;
+
+      // Dados para enviar à API
+      const donationData = {
+        nome,
+        nascimento,
+        email,
+        telefone,
+        walletAddress: userAddress,
+        donationAmount,
+        transactionHash: transaction.hash,
+        destinationWallet: ONG_WALLET_ADDRESS,
+      };
+
+      // Enviar os dados para a API usando axios
+      await saveDonationData(donationData);
     } catch (error) {
       setErrorMessage('Erro ao realizar a doação: ' + error.message);
-      console.error(error); // Logar o erro para depuração
+      console.error(error);
+    }
+  };
+
+  const saveDonationData = async (donationData) => {
+    try {
+      const response = await api.post('/api/doacoes', donationData);
+      console.log('Dados da doação salvos com sucesso:', response.data);
+    } catch (error) {
+      console.error('Erro ao salvar os dados na API:', error);
+      setErrorMessage('Erro ao salvar os dados no banco: ' + error.message);
     }
   };
 
