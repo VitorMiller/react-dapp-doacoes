@@ -55,22 +55,22 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
       alert('Doação realizada com sucesso!');
       setDonationAmount(''); // Limpar o campo de valor após a doação
 
-      // Dados do formulário
+      // Coletando dados do formulário
       const nome = document.getElementById('nome').value;
-      const nascimento = document.getElementById('nascimento').value;
+      const nascimento = document.getElementById('nascimento').value; // No formato 'YYYY-MM-DD'
       const email = document.getElementById('email').value;
       const telefone = document.getElementById('telefone').value;
 
       // Dados para enviar à API
       const donationData = {
-        nome,
-        nascimento,
-        email,
-        telefone,
-        walletAddress: userAddress,
-        donationAmount,
-        transactionHash: transaction.hash,
-        destinationWallet: ONG_WALLET_ADDRESS,
+        nome_doador: nome,
+        nascimento_doador: nascimento, // No formato de data 'YYYY-MM-DD'
+        email_doador: email,
+        telefone_doador: telefone,
+        carteira_doador: userAddress,
+        valor: parseFloat(donationAmount), // Convertido para float
+        hash_transacao: transaction.hash,
+        id_ong: ongId, // ID da ONG
       };
 
       // Enviar os dados para a API usando axios
@@ -83,7 +83,7 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
 
   const saveDonationData = async (donationData) => {
     try {
-      const response = await api.post('/api/doacoes', donationData);
+      const response = await api.post('/post_cadastro_doacao', donationData);
       console.log('Dados da doação salvos com sucesso:', response.data);
     } catch (error) {
       console.error('Erro ao salvar os dados na API:', error);
