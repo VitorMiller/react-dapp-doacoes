@@ -1,5 +1,5 @@
 import  { useState } from "react";
-import api from "./axiosApi"; // Importando o arquivo de configuração do Axios
+import api from "./axiosApi"; 
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -100,15 +100,19 @@ const Cadastro = () => {
                 />
               </div>
               <div className="mt-10">
-                <input
-                  type="text"
+                <select
                   name="estado_responsavel"
-                  placeholder="Estado"
-                  required
                   className="form-control"
                   value={formData.estado_responsavel}
                   onChange={handleChange}
-                />
+                  required
+                >
+                  <option value="">Estado</option>
+                  <option value="ES">ES</option>
+                  <option value="SP">SP</option>
+                  <option value="MG">MG</option>
+                  <option value="GO">GO</option>
+                </select>
               </div>
 
               <h4 className="mt-5">Dados da Instituição</h4>
@@ -169,15 +173,19 @@ const Cadastro = () => {
                 />
               </div>
               <div className="mt-10">
-                <input
-                  type="text"
+                <select
                   name="estado_ong"
-                  placeholder="Estado da ONG"
-                  required
                   className="form-control"
                   value={formData.estado_ong}
                   onChange={handleChange}
-                />
+                  required
+                >
+                  <option value="">Estado da ONG</option>
+                  <option value="ES">ES</option>
+                  <option value="SP">SP</option>
+                  <option value="MG">MG</option>
+                  <option value="GO">GO</option>
+                </select>
               </div>
               <div className="mt-10">
                 <input
