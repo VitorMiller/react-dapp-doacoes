@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TableDoacoes from './TableDoacoes';
 import TableRetiradas from './TableRetiradas';
 import { ethers } from 'ethers';
-import axios from 'axios'; // Importe o axios
+import axios from 'axios'; 
 import api from './axiosApi';
 
 const ModalDoar = ({ ongId, doacoes, retiradas }) => {
@@ -55,13 +55,13 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
       alert('Doação realizada com sucesso!');
       setDonationAmount(''); // Limpar o campo de valor após a doação
 
-      // Coletando dados do formulário
+      
       const nome = document.getElementById('nome').value;
       const nascimento = document.getElementById('nascimento').value; // No formato 'YYYY-MM-DD'
       const email = document.getElementById('email').value;
       const telefone = document.getElementById('telefone').value;
 
-      // Dados para enviar à API
+    
       const donationData = {
         nome_doador: nome,
         nascimento_doador: nascimento, // No formato de data 'YYYY-MM-DD'
@@ -73,7 +73,7 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
         id_ong: ongId, // ID da ONG
       };
 
-      // Enviar os dados para a API usando axios
+     
       await saveDonationData(donationData);
     } catch (error) {
       setErrorMessage('Erro ao realizar a doação: ' + error.message);
