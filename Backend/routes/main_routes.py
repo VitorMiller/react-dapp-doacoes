@@ -9,6 +9,8 @@ from repositories.doacao_repo import DoacaoRepo
 from repositories.ong_repo import OngRepo
 from repositories.responsavel_repo import ResponsavelRepo
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 router = APIRouter()
 
@@ -21,7 +23,7 @@ async def post_cadastro_ong(cadastrar_ong_dto: CadastrarOngDTO):
             email = cadastrar_ong_dto.email_responsavel,
             endereco = cadastrar_ong_dto.endereco_responsavel,
             cidade = cadastrar_ong_dto.cidade_responsavel,
-            estado = cadastrar_ong_dto.estado_ong,
+            estado = cadastrar_ong_dto.estado_responsavel,
         )
             
        
