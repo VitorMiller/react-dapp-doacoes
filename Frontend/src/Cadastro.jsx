@@ -1,5 +1,8 @@
-import  { useState } from "react";
-import api from "./axiosApi"; 
+import { useState } from "react";
+import api from "./axiosApi";
+import { useNavigate } from "react-router-dom";
+import parseErrors from "./parseErrors";
+import { toast } from "react-toastify";
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -16,22 +19,39 @@ const Cadastro = () => {
     cidade_ong: "",
     estado_ong: "",
     carteira_ong: "",
+    senha: "",
+    imagem: null,
   });
+  const [file, setFile] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  function handleFileChange(event) {
+    setFile(event.target.files[0]);
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (file) {
+      setFormData({ ...formData, imagem: file });
+    }
     try {
-      const response = await api.post("post_cadastro_ong", formData);
+      const response = await api.postForm("post_cadastro_ong", formData);
       console.log("Cadastro realizado com sucesso:", response.data);
       alert("Cadastro realizado com sucesso!");
+      navigate("/login");
     } catch (error) {
-      console.error("Erro ao cadastrar:", error.response?.data || error.message);
-      alert("Erro ao cadastrar. Verifique os dados e tente novamente.");
+      console.error("Erro ao realizar cadastro:", error);
+      toast.error("Erro ao realizar cadastro!");
+      if (error && error.response && error.response.data)
+        setErrors(parseErrors(error.response.data));
     }
   };
 
@@ -197,6 +217,35 @@ const Cadastro = () => {
                   value={formData.carteira_ong}
                   onChange={handleChange}
                 />
+              </div>
+              <hr />
+              <div className="mt-10">
+                <input
+                  type="password"
+                  name="senha"
+                  placeholder="Senha"
+                  required
+                  className="form-control"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mt-10">
+                <input
+                  type="password"
+                  name="confirmacao_senha"
+                  placeholder="Confirmação de Senha"
+                  required
+                  className="form-control"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <div className="mt-10">
+                  <label htmlFor="imagem" className='form-label'>Foto de Perfil da Ong</label>
+                  <input type="file" id="imagem" name="imagem" className={`form-control ${errors?.imagem ? 'is-invalid' : ''}`} onChange={handleFileChange} accept='image/*' />
+                  {errors?.imagem && <div
+                    className='invalid-feedback'>{errors.imagem}</div>}
+                </div>
               </div>
               <button type="submit" className="mt-5 btn btn-success">
                 Cadastrar

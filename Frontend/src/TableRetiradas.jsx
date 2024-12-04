@@ -3,21 +3,20 @@ import React from 'react';
 const TableRetiradas = ({ retiradas }) => {
     return (
         <div>
-            <h4>Últimas Retiradas</h4>
             <table className='table table-sm table-striped'>
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Finalidade</th>
+                        <th>Data e Hora</th>
+                        <th>Hash da Transação</th>
                         <th>Valor</th>
                     </tr>
                 </thead>
                 <tbody style={{"font-family": "Roboto"}}>
                     {retiradas.map((retirada, index) => (
                         <tr key={index}>
-                            <td>{retirada.data}</td>
-                            <td>{retirada.finalidade}</td>
-                            <td>{retirada.valor}</td>
+                            <td>{retirada.datetime}</td>
+                            <td title={retirada.hash}>{retirada.hash.substring(0, 30)}...</td>
+                            <td>{retirada.value} Ethers</td>
                         </tr>
                     ))}
                 </tbody>

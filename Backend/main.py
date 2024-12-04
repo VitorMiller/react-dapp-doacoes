@@ -3,7 +3,7 @@ from repositories.doacao_repo import DoacaoRepo
 from repositories.ong_repo import OngRepo
 from repositories.responsavel_repo import ResponsavelRepo
 from fastapi.middleware.cors import CORSMiddleware
-from routes import main_routes
+from routes import auth_routes, main_routes
 
 
 
@@ -23,3 +23,4 @@ app.add_middleware(
 
 
 app.include_router(main_routes.router)
+app.include_router(auth_routes.router)

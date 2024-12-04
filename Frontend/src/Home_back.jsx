@@ -26,10 +26,43 @@ function Home() {
         }
     }
 
+    const loadDoacoes = (ongId) => {
+        setLoading(true);
+        // todo: fetch doacoes from blockchain
+
+        // Mock data
+        const doacoes = [
+            { data: '2021-09-01', carteira: '0x1234567890', valor: 1 },
+            { data: '2021-09-02', carteira: '0x1234567890', valor: 2 },
+            { data: '2021-09-03', carteira: '0x1234567890', valor: 3 },
+            { data: '2021-09-04', carteira: '0x1234567890', valor: 4 },
+            { data: '2021-09-05', carteira: '0x1234567890', valor: 5 },
+        ];
+        setDoacoes(doacoes);
+        setLoading(false);
+    }
+
+    const loadRetiradas = (ongId) => {
+        setLoading(true);
+
+        // todo: fetch retiradas from blockchain
+
+        // Mock data
+        const retiradas = [
+            { data: '2021-09-01', finalidade: 'Compra de alimentos', valor: 1 },
+            { data: '2021-09-02', finalidade: 'Compra de roupas', valor: 2 },
+            { data: '2021-09-03', finalidade: 'Compra de brinquedos', valor: 3 },
+            { data: '2021-09-04', finalidade: 'Compra de livros', valor: 4 },
+            { data: '2021-09-05', finalidade: 'Compra de material escolar', valor: 5 },
+        ];
+        setRetiradas(retiradas);
+        setLoading(false);
+    }
+
     const handleDoar = (ong) => {
         setSelectedOng(ong);
-        const modal = new bootstrap.Modal(document.getElementById('modalDoar'));
-        modal.show();
+        loadDoacoes(ong.id);
+        loadRetiradas(ong.id);
         setShowModal(true);
     }
 
@@ -40,7 +73,7 @@ function Home() {
 
     return (
         <>
-            <ModalDoar ong={SelectOng} />
+            {showModal && <ModalDoar show={showModal} ong={SelectOng} doacoes={doacoes} retiradas={retiradas} handleClose={() => setShowModal(false)}/>}
             <div className="slider_area">
                 <div className="single_slider  d-flex align-items-center slider_bg_1 overlay2">
                     <div className="container">

@@ -1,5 +1,15 @@
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const HeaderLogado = () => {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        toast.success('Logout realizado com sucesso!', {delay: 5000});
+
+        navigate('/login');
+    }
+    
     return (
         <div>
             <div className="header-area ">
@@ -73,7 +83,7 @@ const HeaderLogado = () => {
                                     </nav>
                                     <div className="Appointment">
                                         <div className="book_btn d-none d-lg-block">
-                                            <a href="/">Sair</a>
+                                            <a href="#" onClick={handleLogout} >Sair</a>
                                         </div>
                                     </div>
                                 </div>

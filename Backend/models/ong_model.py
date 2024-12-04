@@ -14,3 +14,5 @@ class Ong:
     estado: Optional[str] = None
     carteira: Optional[str] = None
     id_responsavel: Optional[int] = None
+    senha: Optional[str] = None
+    token: Optional[str] = None

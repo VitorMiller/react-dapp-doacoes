@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableDoacoes from './TableDoacoes';
 import TableRetiradas from './TableRetiradas';
 import { ethers } from 'ethers';
-import axios from 'axios'; 
+import axios from 'axios';
 import api from './axiosApi';
+import { toast } from 'react-toastify';
 
-const ModalDoar = ({ ongId, doacoes, retiradas }) => {
+const ModalDoar = ({ ong }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [donationAmount, setDonationAmount] = useState(''); // Estado para o valor da doação
-
-  const ONG_WALLET_ADDRESS = '0x1feF888b16e87FBcc2F676FE562259ec9266703F'; // Endereço da carteira da ONG
+  const [donations, setDonations] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
+  const [balance, setBalance] = useState(0);
 
   const connectWallet = async () => {
     try {
@@ -47,21 +49,21 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
       const value = ethers.parseUnits(donationAmount, 'ether');
 
       const transaction = await signer.sendTransaction({
-        to: ONG_WALLET_ADDRESS,
+        to: ong.carteira,
         value,
       });
 
       await transaction.wait(); // Aguardar a confirmação da transação
-      alert('Doação realizada com sucesso!');
+      toast.success('Doação realizada com sucesso!');
       setDonationAmount(''); // Limpar o campo de valor após a doação
 
-      
+
       const nome = document.getElementById('nome').value;
       const nascimento = document.getElementById('nascimento').value; // No formato 'YYYY-MM-DD'
       const email = document.getElementById('email').value;
       const telefone = document.getElementById('telefone').value;
 
-    
+
       const donationData = {
         nome_doador: nome,
         nascimento_doador: nascimento, // No formato de data 'YYYY-MM-DD'
@@ -70,13 +72,14 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
         carteira_doador: userAddress,
         valor: parseFloat(donationAmount), // Convertido para float
         hash_transacao: transaction.hash,
-        id_ong: ongId, // ID da ONG
+        id_ong: ong.id, // ID da ONG
       };
 
-     
+
       await saveDonationData(donationData);
     } catch (error) {
       setErrorMessage('Erro ao realizar a doação: ' + error.message);
+      toast.error('Erro ao realizar a doação: ' + error.message);
       console.error(error);
     }
   };
@@ -90,6 +93,94 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
       setErrorMessage('Erro ao salvar os dados no banco: ' + error.message);
     }
   };
+
+  const fetchTransactions = async () => {
+    const apiKey = "F8KVKAD3VJ3XCDYRAXWT77CQTE63EIATU5";
+    const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${ong.carteira}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
+
+    try {
+      const response = await axios.get(url);
+      if (response.data.status === "1") {
+        return response.data.result; // Retorna a lista de transações
+      } else {
+        console.error("Erro ao buscar transações:", response.data.message);
+        return [];
+      }
+    } catch (error) {
+      console.error("Erro ao buscar transações:", error);
+      return [];
+    }
+  };
+
+  const getWalletBalance = async () => {
+    const apiKey = "F8KVKAD3VJ3XCDYRAXWT77CQTE63EIATU5";
+    const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${ong.carteira}&tag=latest&apikey=${apiKey}`;
+
+    try {
+      const response = await axios.get(url);
+      if (response.data.status === "1") {
+        return ethers.formatEther(response.data.result);
+      } else {
+        console.error("Erro ao buscar saldo da carteira:", response.data.message);
+        return "0";
+      }
+    } catch (error) {
+      console.error("Erro ao buscar saldo da carteira:", error);
+      return "0";
+    }
+  };
+
+  const processTransactions = (transactions) => {
+    const donations = [];
+    const withdrawals = [];
+
+    transactions.forEach((tx) => {
+      const value = parseFloat(ethers.formatEther(tx.value));
+      const date = new Date(tx.timeStamp * 1000);
+      if (tx.to.toLowerCase() === ong.carteira.toLowerCase()) {
+        // convert the timestamp to a human-readable format
+        donations.push({ hash: tx.hash, value, datetime: date.toLocaleString() });
+      } else if (tx.from.toLowerCase() === ong.carteira.toLowerCase()) {
+        withdrawals.push({ hash: tx.hash, value, datetime: date.toLocaleString() });
+      }
+    });
+
+    return {
+      donations: donations.slice(0, 5), // Últimas 5 doações
+      withdrawals: withdrawals.slice(0, 5), // Últimas 5 retiradas
+    };
+  };
+
+  const loadWalletData = async () => {
+    try {
+      const transactions = await fetchTransactions();
+      const balance = await getWalletBalance();
+      const { donations, withdrawals } = processTransactions(transactions);
+      setDonations(donations);
+      setWithdrawals(withdrawals);
+      setBalance(balance);
+      console.log("doações:", donations);
+      console.log("retiradas:", withdrawals);
+      console.log("saldo:", balance);
+    } catch (error) {
+      console.error("Erro ao carregar dados da carteira:", error);
+    }
+  };
+
+
+  const loadOng = async () => {
+    try {
+      const response = await api.get(`/get_ongs/${ongId}`);
+      setOng(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar a ONG:', error);
+    }
+  }
+
+  useEffect(() => {
+    if (!ong) return;
+    loadWalletData();
+  }, [ong]);
 
   return (
     <div className="modal fade" id="modalDoar" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
@@ -111,12 +202,19 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
                     alt="Charity Image"
                   />
                   <div className="card-body">
-                    <h5 className="card-title">World Wildlife Fund</h5>
-                    <a href="https://worldwildlife.org" className="card-subtitle text-muted">
-                      worldwildlife.org
-                    </a>
+                    <h5 className="card-title">{ong?.nome}</h5>
+                    {/* Nome, Email, Causa, Cidade, Estado */}
+                    <p className="card-text">
+                      <strong>Email:</strong> {ong?.email}
+                    </p>
+                    <p className="card-text">
+                      <strong>Cidade:</strong> {ong?.cidade}
+                    </p>
+                    <p className="card-text">
+                      <strong>Estado:</strong> {ong?.estado}
+                    </p>
                     <p className="card-text mt-3">
-                      Conserve nature and reduce the most pressing threats to the diversity of life on Earth.
+                      <strong>Causa:</strong> {ong?.causa}
                     </p>
                   </div>
                 </div>
@@ -190,16 +288,18 @@ const ModalDoar = ({ ongId, doacoes, retiradas }) => {
 
             {/* Tabelas de doações e retiradas */}
             <div className="mt-5 mb-10">
-              <h4>Balanço da ONG: R$5.000,00</h4>
+              <h4>Saldo atual da ONG: {balance} Ethers</h4>
             </div>
             <hr />
-            {doacoes.length > 0 ? (
-              <TableDoacoes doacoes={doacoes} />
+            <h4>Últimas doações</h4>
+            {donations.length > 0 ? (
+              <TableDoacoes doacoes={donations} />
             ) : (
               <p>Nenhuma doação realizada ainda.</p>
             )}
-            {retiradas.length > 0 ? (
-              <TableRetiradas retiradas={retiradas} />
+            <h4>Últimas Retiradas</h4>
+            {withdrawals.length > 0 ? (
+              <TableRetiradas retiradas={withdrawals} />
             ) : (
               <p>Nenhuma movimentação realizada ainda.</p>
             )}
