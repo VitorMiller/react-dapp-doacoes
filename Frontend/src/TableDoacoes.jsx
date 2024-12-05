@@ -2,7 +2,7 @@ import React from 'react';
 
 const TableDoacoes = ({ doacoes }) => {
     return (
-        <div>            
+        <div>
             <table className='table table-sm table-striped'>
                 <thead>
                     <tr>
@@ -11,12 +11,12 @@ const TableDoacoes = ({ doacoes }) => {
                         <th>Valor</th>
                     </tr>
                 </thead>
-                <tbody style={{"font-family": "Roboto"}}>
+                <tbody style={{ "font-family": "Roboto" }}>
                     {doacoes.map((doacao, index) => (
                         <tr key={index}>
-                            <td>{doacao.datetime}</td>
-                            <td title={doacao.hash}>{doacao.hash.substring(0, 30)}...</td>
-                            <td>{doacao.value} Ethers</td>
+                            <td>{doacao.data_hora_doacao}</td>
+                            <td title={doacao.hash_transacao}>{doacao.hash_transacao.substring(0, 30)}...</td>
+                            <td>{doacao.valor} Ethers</td>
                         </tr>
                     ))}
                 </tbody>

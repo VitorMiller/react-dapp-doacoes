@@ -4,7 +4,7 @@ import TableRetiradas from './TableRetiradas';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import api from './axiosApi';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ModalDoar = ({ ong }) => {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -137,6 +137,7 @@ const ModalDoar = ({ ong }) => {
 
   return (
     <div className="modal fade" id="modalDoar" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
+      <ToastContainer />
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">

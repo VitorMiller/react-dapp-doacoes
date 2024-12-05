@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
 from dtos.cadastrar_doacao_dto import CadastrarDoacaoDTO
+from dtos.cadastrar_retirada_dto import CadastrarRetiradaDTO
 from dtos.cadastrar_ong_dto import CadastrarOngDTO
 from models.doacao_model import Doacao
 from models.ong_model import Ong
@@ -8,6 +9,8 @@ from models.responsavel_model import Responsavel
 from repositories.doacao_repo import DoacaoRepo
 from repositories.ong_repo import OngRepo
 from repositories.responsavel_repo import ResponsavelRepo
+from models.retirada_model import Retirada
+from repositories.retirada_repo import RetiradaRepo
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -84,4 +87,30 @@ async def post_cadastro_doacao(cadastrar_doacao_dto: CadastrarDoacaoDTO):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Erro ao cadastrar responsável: {str(e)}"
+        )
+
+
+@router.post("/post_cadastro_retirada")
+async def post_cadastro_retirada(request: Request, cadastrar_retirada_dto: CadastrarRetiradaDTO):
+    id_ong = request.state.usuario.id
+    try:
+        ong_existe = OngRepo.buscar_por_id(id_ong)
+        if not ong_existe:
+            raise HTTPException(
+                status_code=404, detail=f"ONG com ID {id_ong} não encontrada."
+            )
+
+        retirada = RetiradaRepo.inserir(
+            Retirada(
+                id=0,
+                id_ong=id_ong,
+                valor=cadastrar_retirada_dto.valor,
+                finalidade=cadastrar_retirada_dto.finalidade,
+            )
+        )
+
+        return {"success": True, "data": retirada}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erro ao cadastrar retirada: {str(e)}"
         )

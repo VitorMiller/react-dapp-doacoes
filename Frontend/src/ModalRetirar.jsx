@@ -1,10 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import TableDoacoes from './TableDoacoes'
 import TableRetiradas from './TableRetiradas';
+import api from './axiosApi';
+import { useNavigate } from 'react-router-dom';
 
-const ModalRetirar = ({ ongId, doacoes, retiradas }) => {
+const ModalRetirar = ({ ongId, retiradas }) => {
+    const [inputs, setInputs] = useState({
+        finalidade: '',
+        valor: ''
+    });
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.post('/perfilOng/post_cadastro_retirada', inputs);
+            navigate('/perfilOng');
+            console.log(response);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setInputs({
+            ...inputs,
+            [name]: value
+        });
+    }
 
     return (
         <div className="modal fade" id="modalRetirar" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
@@ -20,18 +46,18 @@ const ModalRetirar = ({ ongId, doacoes, retiradas }) => {
                         <div className="row">
                             {/* Coluna 2 - Seleção de Moeda e Valor */}
                             <div className="col">
-                                <form>
+                                <form onSubmit={handleSubmit} >
                                     <div className='form-group mt-3'>
                                         <label htmlFor="finalidade">Finalidade</label>
-                                        <input type="text" name="finalidade" id="finalidade" className='form-control' />
+                                        <input type="text" name="finalidade" id="finalidade" className='form-control' value={inputs?.finalidade} onChange={handleChange} />
                                     </div>
                                     <div className="form-group mt-3">
                                         <label htmlFor='valor'>Valor</label>
-                                        <input className='form-control' type="number" name="valor" id="valor" placeholder="0.0" />
+                                        <input className='form-control' type="number" name="valor" id="valor" placeholder="0.0" value={inputs?.valor} onChange={handleChange} />
                                     </div>
 
                                     <button variant="warning" className="mt-4 w-100">
-                                        Conectar Carteira
+                                        Cadastrar Retirada
                                     </button>
                                 </form>
                             </div>
@@ -41,11 +67,11 @@ const ModalRetirar = ({ ongId, doacoes, retiradas }) => {
                         </div>
                         <hr />
 
-                        {retiradas.length > 0 ? 
-                            <TableRetiradas retiradas={retiradas} /> : 
+                        {retiradas.length > 0 ?
+                            <TableRetiradas retiradas={retiradas} /> :
                             (<p>Nenhuma movimentação realizada ainda.</p>)}
                     </div>
-                    
+
                 </div>
                 {/* <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Não</button>

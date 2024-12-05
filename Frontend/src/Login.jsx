@@ -46,7 +46,7 @@ const Login = () => {
                             <input type="password" name="senha" placeholder="Senha" required
                                 className="form-control" value={inputs.senha} onChange={handleInputChange} />
                         </div>
-                        {errors.email && <p className="text-danger mt-3">{errors.email}</p>}                        
+                        {errors.email && <p className="text-danger mt-3">{errors.email}</p>}
 
                         <p className="text-center mt-2 mb-3">Não possui conta? <a href="/cadastro">Cadastre-se!</a></p>
                         <button type="submit" className="mt-2 genric-btn info radius">Entrar</button>

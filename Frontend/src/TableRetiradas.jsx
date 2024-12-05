@@ -11,12 +11,12 @@ const TableRetiradas = ({ retiradas }) => {
                         <th>Valor</th>
                     </tr>
                 </thead>
-                <tbody style={{"font-family": "Roboto"}}>
+                <tbody style={{ "font-family": "Roboto" }}>
                     {retiradas.map((retirada, index) => (
                         <tr key={index}>
-                            <td>{retirada.datetime}</td>
-                            <td title={retirada.hash}>{retirada.hash.substring(0, 30)}...</td>
-                            <td>{retirada.value} Ethers</td>
+                            <td>{retirada.data_hora_retirada}</td>
+                            <td title={retirada.finalidade}>{retirada.finalidade.substring(0, 30)}...</td>
+                            <td>{retirada.valor} Ethers</td>
                         </tr>
                     ))}
                 </tbody>
