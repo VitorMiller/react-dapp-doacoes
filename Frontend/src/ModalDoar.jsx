@@ -10,8 +10,8 @@ const ModalDoar = ({ ong }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [donationAmount, setDonationAmount] = useState(''); // Estado para o valor da doação
-  const [donations, setDonations] = useState([]);
-  const [withdrawals, setWithdrawals] = useState([]);
+  const [doacoes, setDoacoes] = useState([]);
+  const [retiradas, setRetiradas] = useState([]);
   const [balance, setBalance] = useState(0);
 
   const connectWallet = async () => {
@@ -94,24 +94,6 @@ const ModalDoar = ({ ong }) => {
     }
   };
 
-  const fetchTransactions = async () => {
-    const apiKey = "F8KVKAD3VJ3XCDYRAXWT77CQTE63EIATU5";
-    const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${ong.carteira}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
-
-    try {
-      const response = await axios.get(url);
-      if (response.data.status === "1") {
-        return response.data.result; // Retorna a lista de transações
-      } else {
-        console.error("Erro ao buscar transações:", response.data.message);
-        return [];
-      }
-    } catch (error) {
-      console.error("Erro ao buscar transações:", error);
-      return [];
-    }
-  };
-
   const getWalletBalance = async () => {
     const apiKey = "F8KVKAD3VJ3XCDYRAXWT77CQTE63EIATU5";
     const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${ong.carteira}&tag=latest&apikey=${apiKey}`;
@@ -119,67 +101,38 @@ const ModalDoar = ({ ong }) => {
     try {
       const response = await axios.get(url);
       if (response.data.status === "1") {
-        return ethers.formatEther(response.data.result);
+        setBalance(ethers.formatEther(response.data.result));
       } else {
         console.error("Erro ao buscar saldo da carteira:", response.data.message);
-        return "0";
       }
     } catch (error) {
       console.error("Erro ao buscar saldo da carteira:", error);
-      return "0";
     }
   };
 
-  const processTransactions = (transactions) => {
-    const donations = [];
-    const withdrawals = [];
-
-    transactions.forEach((tx) => {
-      const value = parseFloat(ethers.formatEther(tx.value));
-      const date = new Date(tx.timeStamp * 1000);
-      if (tx.to.toLowerCase() === ong.carteira.toLowerCase()) {
-        // convert the timestamp to a human-readable format
-        donations.push({ hash: tx.hash, value, datetime: date.toLocaleString() });
-      } else if (tx.from.toLowerCase() === ong.carteira.toLowerCase()) {
-        withdrawals.push({ hash: tx.hash, value, datetime: date.toLocaleString() });
-      }
-    });
-
-    return {
-      donations: donations.slice(0, 5), // Últimas 5 doações
-      withdrawals: withdrawals.slice(0, 5), // Últimas 5 retiradas
-    };
-  };
-
-  const loadWalletData = async () => {
+  const loadDoacoes = async () => {
     try {
-      const transactions = await fetchTransactions();
-      const balance = await getWalletBalance();
-      const { donations, withdrawals } = processTransactions(transactions);
-      setDonations(donations);
-      setWithdrawals(withdrawals);
-      setBalance(balance);
-      console.log("doações:", donations);
-      console.log("retiradas:", withdrawals);
-      console.log("saldo:", balance);
+      const response = await api.get('/get_doacoes/' + ong.id);
+      setDoacoes(response.data);
     } catch (error) {
-      console.error("Erro ao carregar dados da carteira:", error);
+      console.error('Erro ao buscar as doações:', error);
     }
-  };
+  }
 
-
-  const loadOng = async () => {
+  const loadRetiradas = async () => {
     try {
-      const response = await api.get(`/get_ongs/${ongId}`);
-      setOng(response.data);
+      const response = await api.get('/get_retiradas/' + ong.id);
+      setRetiradas(response.data);
     } catch (error) {
-      console.error('Erro ao carregar a ONG:', error);
+      console.error('Erro ao buscar as retiradas:', error);
     }
   }
 
   useEffect(() => {
     if (!ong) return;
-    loadWalletData();
+    loadDoacoes();
+    loadRetiradas();
+    getWalletBalance();
   }, [ong]);
 
   return (
@@ -292,14 +245,14 @@ const ModalDoar = ({ ong }) => {
             </div>
             <hr />
             <h4>Últimas doações</h4>
-            {donations.length > 0 ? (
-              <TableDoacoes doacoes={donations} />
+            {doacoes.length > 0 ? (
+              <TableDoacoes doacoes={doacoes} />
             ) : (
               <p>Nenhuma doação realizada ainda.</p>
             )}
             <h4>Últimas Retiradas</h4>
-            {withdrawals.length > 0 ? (
-              <TableRetiradas retiradas={withdrawals} />
+            {retiradas.length > 0 ? (
+              <TableRetiradas retiradas={retiradas} />
             ) : (
               <p>Nenhuma movimentação realizada ainda.</p>
             )}

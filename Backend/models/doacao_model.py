@@ -7,6 +7,7 @@ from typing import Optional
 @dataclass
 class Doacao:
     id: Optional[int] = None
+    data_hora_doacao: Optional[date] = None
     nome_doador: Optional[str] = None
     nascimento_doador: Optional[date] = None
     email_doador: Optional[str] = None

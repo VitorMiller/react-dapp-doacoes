@@ -1,16 +1,19 @@
 from io import BytesIO
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 from PIL import Image
 from fastapi.responses import JSONResponse
 
 from dtos.cadastrar_doacao_dto import CadastrarDoacaoDTO
+from dtos.cadastrar_retirada_dto import CadastrarRetiradaDTO
 from dtos.cadastrar_ong_dto import CadastrarOngDTO
 from dtos.problem_details_dto import ProblemDetailsDto
 from models.doacao_model import Doacao
 from models.ong_model import Ong
 from models.responsavel_model import Responsavel
+from models.retirada_modael import Retirada
 from repositories.doacao_repo import DoacaoRepo
+from repositories.retirada_repo import RetiradaRepo
 from repositories.ong_repo import OngRepo
 from repositories.responsavel_repo import ResponsavelRepo
 
@@ -137,6 +140,42 @@ async def post_cadastro_doacao(cadastrar_doacao_dto: CadastrarDoacaoDTO):
             status_code=500, detail=f"Erro ao cadastrar responsável: {str(e)}"
         )
 
+
+@router.get("/get_doacoes/{id_ong}")
+async def obter_doacoes(id_ong: int):
+    doacoes = DoacaoRepo.obter_por_ong(id_ong, limit=5, offset=0)
+    return doacoes
+
+@router.post("/post_cadastro_retirada")
+async def post_cadastro_retirada(request: Request, cadastrar_retirada_dto: CadastrarRetiradaDTO):
+    id_ong = request.state.usuario.id
+    try:
+        ong_existe = OngRepo.buscar_por_id(id_ong)
+        if not ong_existe:
+            raise HTTPException(
+                status_code=404, detail=f"ONG com ID {id_ong} não encontrada."
+            )
+
+        retirada = RetiradaRepo.inserir(
+            Retirada(
+                id=0,
+                id_ong=id_ong,
+                data=cadastrar_retirada_dto.data,
+                valor=cadastrar_retirada_dto.valor,
+                finalidade=cadastrar_retirada_dto.finalidade,
+            )
+        )
+
+        return {"success": True, "data": retirada}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erro ao cadastrar retirada: {str(e)}"
+        )
+
+@router.get("/get_retiradas/{id_ong}")
+async def obter_retiradas(id_ong: int):
+    retiradas = RetiradaRepo.obter_por_ong(id_ong, limit=5, offset=0)
+    return retiradas
 
 @router.get("/get_ongs")
 async def obter_ongs():
